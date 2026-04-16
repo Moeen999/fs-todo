@@ -1,0 +1,80 @@
+import { useState } from "react";
+import { X, Mail, Lock, User } from "lucide-react";
+
+export default function AuthModal({ close }) {
+  const [mode, setMode] = useState("login");
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center px-4">
+      <div className="bg-zinc-900 w-full max-w-md rounded-xl p-6 relative">
+        <button
+          onClick={close}
+          className="absolute top-4 right-4 text-zinc-400 hover:text-white"
+        >
+          <X size={20} />
+        </button>
+
+        <h2 className="text-2xl font-semibold text-center mb-6">
+          {mode === "login" ? "Welcome Back" : "Create Account"}
+        </h2>
+
+        <form className="space-y-4">
+          {mode === "signup" && (
+            <div className="relative">
+              <User className="absolute left-3 top-3 text-zinc-400" size={18} />
+              <input
+                className="w-full text-sm bg-zinc-800 border border-zinc-700 pl-10 pr-4 py-3 rounded-lg outline-none"
+                placeholder="Full Name"
+              />
+            </div>
+          )}
+
+          <div className="relative">
+            <Mail className="absolute left-3 top-3 text-zinc-400" size={18} />
+            <input
+              className="w-full text-sm bg-zinc-800 border border-zinc-700 pl-10 pr-4 py-3 rounded-lg outline-none"
+              placeholder="Email Address"
+            />
+          </div>
+
+          <div className="relative">
+            <Lock className="absolute left-3 top-3 text-zinc-400" size={18} />
+            <input
+              type="password"
+              className="w-full text-sm bg-zinc-800 border border-zinc-700 pl-10 pr-4 py-3 rounded-lg outline-none"
+              placeholder="Password"
+            />
+          </div>
+
+          <button className="w-full bg-emerald-600 hover:bg-emerald-700 py-3 rounded-lg font-medium transition">
+            {mode === "login" ? "Login" : "Sign Up"}
+          </button>
+        </form>
+
+        <p className="text-sm text-center text-zinc-400 mt-4">
+          {mode === "login" ? (
+            <>
+              Don’t have an account?{" "}
+              <button
+                onClick={() => setMode("signup")}
+                className="text-emerald-500 hover:underline"
+              >
+                Sign up
+              </button>
+            </>
+          ) : (
+            <>
+              Already have an account?{" "}
+              <button
+                onClick={() => setMode("login")}
+                className="text-emerald-500 hover:underline"
+              >
+                Login
+              </button>
+            </>
+          )}
+        </p>
+      </div>
+    </div>
+  );
+}
