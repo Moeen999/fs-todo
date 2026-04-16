@@ -3,8 +3,7 @@ import Dashboard from "./pages/Dashboard";
 import Todos from "./pages/Todos";
 import Navbar from "./components/layout/Navbar";
 import Sidebar from "./components/layout/Sidebar";
-import AuthModal from "./pages/Auth";
-
+import Footer from "./components/layout/Footer"
 export default function App() {
 
   return (
@@ -20,6 +19,7 @@ export default function App() {
             </Routes>
           </main>
         </div>
+        <Footer/>
       </div>
     </BrowserRouter>
   );
