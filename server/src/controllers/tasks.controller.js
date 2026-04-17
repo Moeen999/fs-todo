@@ -41,4 +41,17 @@ const updateTodoTitle = async (req, res) => {
     .json({ success: true, message: "Todo updated successfully", todo });
 };
 
-export { createTodo, getTodos, updateTodoTitle };
+const deleteTodo = async (req, res) => {
+  const { id } = req.params;
+
+  const todo = await TodoModel.findOneAndDelete({
+    _id: id,
+    user: req.userId,
+  });
+
+  if (!todo) return res.status(404).json({ message: "Todo not found" });
+
+  res.json({ success: true, message: "Todo deleted successfully" });
+};
+
+export { createTodo, getTodos, updateTodoTitle, deleteTodo };
