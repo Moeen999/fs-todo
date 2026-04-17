@@ -8,11 +8,10 @@ import { Toaster } from "react-hot-toast";
 import { AppContext } from "./context/AppContext";
 import { useContext, useEffect } from "react";
 export default function App() {
-  const { getTodos, getUser } = useContext(AppContext);
+  const { getUser } = useContext(AppContext);
 
   useEffect(() => {
     getUser();
-    getTodos();
   }, []);
 
   return (

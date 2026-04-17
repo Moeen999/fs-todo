@@ -34,6 +34,8 @@ const AppContextProvider = ({ children }) => {
       const { data } = await API.post("/api/user/logout");
       if (data) {
         setUser(null);
+        setToken(null);
+        setTodoData([]);
         toast.success(data?.message);
       }
     } catch (err) {
@@ -42,12 +44,14 @@ const AppContextProvider = ({ children }) => {
   };
 
   const getTodos = async () => {
+    if (!token) return;
+
     try {
       const { data } = await API.get("/api/tasks/get-todos", {
         headers: {
           Authorization: `Bearer ${token}`,
-          withCredentials: true,
         },
+        withCredentials: true,
       });
       setTodoData(data);
     } catch (err) {
@@ -57,7 +61,7 @@ const AppContextProvider = ({ children }) => {
 
   useEffect(() => {
     getUser();
-  }, [token]);
+  }, []);
   useEffect(() => {
     if (token) {
       getTodos();

@@ -1,12 +1,13 @@
 import { CheckCircle, Loader2Icon, User2Icon } from "lucide-react";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import AuthModal from "../../pages/Auth";
 
 export default function Navbar() {
-  const { user, setUser, loading, logoutUser, authOpen,setAuthOpen } = useContext(AppContext);
-    const navigate = useNavigate();
+  const { user, setUser, loading, logoutUser, authOpen, setAuthOpen } =
+    useContext(AppContext);
+  const navigate = useNavigate();
 
   return (
     <nav className="h-16 border-b border-zinc-800 flex items-center px-6">
