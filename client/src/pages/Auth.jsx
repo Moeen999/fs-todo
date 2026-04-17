@@ -8,7 +8,7 @@ import { AppContext } from "../context/AppContext";
 
 export default function AuthModal({ close }) {
   const navigate = useNavigate();
-  const { setUser, authOpen } = useContext(AppContext);
+  const { setUser, setToken, authOpen } = useContext(AppContext);
   const [mode, setMode] = useState("login");
   const [formData, setFormData] = useState({
     name: "",
@@ -34,8 +34,9 @@ export default function AuthModal({ close }) {
         });
 
         if (data?.user) {
-          toast.success(data?.message);
           setUser(data.user);
+          setToken(data.accessToken);
+          toast.success(data?.message);
           navigate("/dashboard");
           close();
         } else {
@@ -48,8 +49,8 @@ export default function AuthModal({ close }) {
           password: formData.password,
         });
         if (data?.user) {
-          toast.success(data?.message);
           setUser(data.user);
+          toast.success(data?.message);
           navigate("/dashboard");
           close();
         } else {

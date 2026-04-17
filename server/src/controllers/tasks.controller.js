@@ -12,9 +12,12 @@ const createTodo = async (req, res) => {
   const todo = await TodoModel.create({
     title,
     user: req.userId,
+    status: "pending",
   });
 
-  res.status(201).json(todo);
+  res
+    .status(201)
+    .json({ success: true, message: "Todo created successfully", todo });
 };
 
 const getTodos = async (req, res) => {
