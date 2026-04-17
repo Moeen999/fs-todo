@@ -96,7 +96,57 @@ const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
-    res.status(200).json({ message: "Login successful" });
+
+    // ! tokens
+    const refreshToken = jwt.sign(
+      {
+        id: user._id,
+      },
+      configs.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      },
+    );
+
+    const refreshTokenHash = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
+
+    const session = await sessionModel.create({
+      user: user._id,
+      refreshToken: refreshTokenHash,
+      ip: req.ip,
+      userAgent: req.headers["user-agent"],
+    });
+
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        sessionId: session._id,
+      },
+      configs.JWT_SECRET,
+      {
+        expiresIn: "15m",
+      },
+    );
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        username: user.name,
+        email: user.email,
+        todos: user.todoData,
+      },
+      accessToken,
+    });
   } catch (error) {
     console.log("Error logging in user:", error);
     res.status(500).json({ message: "Error logging in user" });
