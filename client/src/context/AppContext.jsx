@@ -10,6 +10,8 @@ const AppContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
+  const [todosData, setTodoData] = useState([]);
+  const [authOpen, setAuthOpen] = useState(false);
 
   const getUser = async () => {
     setLoading(true);
@@ -20,6 +22,7 @@ const AppContextProvider = ({ children }) => {
     } catch (err) {
       setUser(null);
       setLoading(false);
+      setAuthOpen(true);
       console.log(err);
     } finally {
       setLoading(false);
@@ -38,9 +41,28 @@ const AppContextProvider = ({ children }) => {
     }
   };
 
+  const getTodos = async () => {
+    try {
+      const { data } = await API.get("/api/tasks/get-todos", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          withCredentials: true,
+        },
+      });
+      setTodoData(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     getUser();
-  }, []);
+  }, [token]);
+  useEffect(() => {
+    if (token) {
+      getTodos();
+    }
+  }, [token]);
 
   const values = {
     user,
@@ -49,6 +71,12 @@ const AppContextProvider = ({ children }) => {
     logoutUser,
     token,
     setToken,
+    getUser,
+    getTodos,
+    todosData,
+    setTodoData,
+    authOpen,
+    setAuthOpen,
   };
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;

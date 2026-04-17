@@ -1,14 +1,15 @@
 import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import EditTodoModal from "../ui/EditTodoModal";
+import { AppContext } from "../../context/AppContext";
 
-export default function TodoCard() {
+export default function TodoCard({ todos }) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex justify-between items-center">
-        <span>Build FS MERN Todo App</span>
+        <span>{todos?.title}</span>
 
         <div className="flex gap-3">
           <button onClick={() => setOpen(true)} className="text-blue-500">
