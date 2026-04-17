@@ -8,7 +8,7 @@ import { AppContext } from "../context/AppContext";
 
 export default function AuthModal({ close }) {
   const navigate = useNavigate();
-  const { setUser } = useContext(AppContext);
+  const { setUser, authOpen } = useContext(AppContext);
   const [mode, setMode] = useState("login");
   const [formData, setFormData] = useState({
     name: "",
@@ -67,6 +67,7 @@ export default function AuthModal({ close }) {
         <button
           onClick={close}
           className="absolute top-4 right-4 text-zinc-400 hover:text-white"
+          disabled={authOpen}
         >
           <X size={20} />
         </button>

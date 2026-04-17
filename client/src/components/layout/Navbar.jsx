@@ -1,12 +1,12 @@
 import { CheckCircle, Loader2Icon, User2Icon } from "lucide-react";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import AuthModal from "../../pages/Auth";
 
 export default function Navbar() {
-  const { user, setUser, loading, logoutUser } = useContext(AppContext);
-  const [authOpen, setAuthOpen] = useState(false);
+  const { user, setUser, loading, logoutUser, authOpen,setAuthOpen } = useContext(AppContext);
+    const navigate = useNavigate();
 
   return (
     <nav className="h-16 border-b border-zinc-800 flex items-center px-6">
@@ -32,6 +32,8 @@ export default function Navbar() {
                 onClick={() => {
                   logoutUser();
                   setUser(null);
+                  navigate("/");
+                  setAuthOpen(true);
                 }}
               >
                 Logout
