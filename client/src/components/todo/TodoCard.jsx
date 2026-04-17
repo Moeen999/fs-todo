@@ -2,9 +2,34 @@ import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import EditTodoModal from "../ui/EditTodoModal";
 import { AppContext } from "../../context/AppContext";
+import API from "../../config/axios";
+import { useContext } from "react";
+import toast from "react-hot-toast";
 
 export default function TodoCard({ todos }) {
+  const { token, getTodos } = useContext(AppContext);
   const [open, setOpen] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      const { data } = await API.delete(
+        `/api/tasks/delete-task/${todos?._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (data.success) {
+        toast.success(data.message);
+        getTodos();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -19,7 +44,7 @@ export default function TodoCard({ todos }) {
           <button onClick={() => setOpen(true)} className="text-blue-500">
             <Edit size={18} />
           </button>
-          <button className="text-red-500">
+          <button className="text-red-500" onClick={handleDelete}>
             <Trash2 size={18} />
           </button>
         </div>

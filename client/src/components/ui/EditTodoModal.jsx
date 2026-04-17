@@ -25,6 +25,8 @@ export default function EditTodoModal({ todos, close }) {
         toast.success(data.message);
         close();
         getTodos();
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
       console.log(error);
@@ -42,7 +44,6 @@ export default function EditTodoModal({ todos, close }) {
           name="title"
           value={updatedTitle}
           onChange={(e) => setUpdatedTitle(e.target.value)}
-          defaultValue={todos?.title}
         />
 
         <div className="flex justify-end gap-3">
