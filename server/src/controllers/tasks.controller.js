@@ -41,6 +41,23 @@ const updateTodoTitle = async (req, res) => {
     .json({ success: true, message: "Todo updated successfully", todo });
 };
 
+const updateTododStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const todo = await TodoModel.findOneAndUpdate(
+    { _id: id, user: req.userId },
+    { status },
+    { new: true },
+  );
+
+  if (!todo) return res.status(404).json({ message: "Todo not found" });
+
+  res
+    .status(200)
+    .json({ success: true, message: "Status updated successfully", todo });
+};
+
 const deleteTodo = async (req, res) => {
   const { id } = req.params;
 
@@ -54,4 +71,4 @@ const deleteTodo = async (req, res) => {
   res.json({ success: true, message: "Todo deleted successfully" });
 };
 
-export { createTodo, getTodos, updateTodoTitle, deleteTodo };
+export { createTodo, getTodos, updateTodoTitle, updateTododStatus, deleteTodo };
