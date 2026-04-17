@@ -3,13 +3,12 @@ import Dashboard from "./pages/Dashboard";
 import Todos from "./pages/Todos";
 import Navbar from "./components/layout/Navbar";
 import Sidebar from "./components/layout/Sidebar";
-import Footer from "./components/layout/Footer"
-import { Toaster } from 'react-hot-toast';
+import Footer from "./components/layout/Footer";
+import { Toaster } from "react-hot-toast";
 export default function App() {
-
   return (
     <BrowserRouter>
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="bottom-right" />
       <div className="px-8 md:px-12 lg:px-16 xl:px-20 min-h-screen bg-zinc-950 text-zinc-100">
         <Navbar />
         <div className="flex">
@@ -21,7 +20,7 @@ export default function App() {
             </Routes>
           </main>
         </div>
-        <Footer/>
+        <Footer />
       </div>
     </BrowserRouter>
   );

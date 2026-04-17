@@ -3,9 +3,12 @@ import { X, Mail, Lock, User } from "lucide-react";
 import toast from "react-hot-toast";
 import API from "../config/axios";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 export default function AuthModal({ close }) {
   const navigate = useNavigate();
+  const { setUser } = useContext(AppContext);
   const [mode, setMode] = useState("login");
   const [formData, setFormData] = useState({
     name: "",
@@ -32,6 +35,7 @@ export default function AuthModal({ close }) {
 
         if (data?.user) {
           toast.success(data?.message);
+          setUser(data.user);
           navigate("/dashboard");
           close();
         } else {
@@ -45,6 +49,7 @@ export default function AuthModal({ close }) {
         });
         if (data?.user) {
           toast.success(data?.message);
+          setUser(data.user);
           navigate("/dashboard");
           close();
         } else {

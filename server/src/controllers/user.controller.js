@@ -2,9 +2,8 @@ import configs from "../../config/config.js";
 import sessionModel from "../models/session.model.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"
-import crypto from "crypto"
-
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const createUser = async (req, res) => {
   try {
@@ -153,4 +152,47 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { createUser, loginUser };
+const getProfile = async (req, res) => {
+  try {
+    const token = req.cookies.refreshToken;
+    if (!token) return res.status(401).json({ message: "Unauthenticated" });
+
+    const decoded = jwt.verify(token, configs.JWT_SECRET);
+
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) return res.status(401).json({ message: "Unauthenticated" });
+
+    const accessToken = jwt.sign({ id: user._id }, configs.JWT_SECRET, {
+      expiresIn: "15m",
+    });
+
+    res.json({
+      user: {
+        username: user.name,
+        email: user.email,
+        todos: user.todoData,
+      },
+      accessToken,
+    });
+  } catch (err) {
+    return res.status(401).json({ message: "Unauthenticated" });
+  }
+};
+
+const logoutUser = async (req, res) => {
+  try {
+    const token = req.cookies.refreshToken;
+    if (!token) return res.status(400).json({ message: "Unauthenticated" });
+
+    const decoded = jwt.verify(token, configs.JWT_SECRET);
+
+    await sessionModel.deleteOne({ refreshToken: decoded.id });
+
+    res.clearCookie("refreshToken");
+    res.status(200).json({ message: "Logout successful" });
+  } catch (err) {
+    return res.status(401).json({ message: "Unauthenticated" });
+  }
+};
+
+export { createUser, loginUser, getProfile, logoutUser };

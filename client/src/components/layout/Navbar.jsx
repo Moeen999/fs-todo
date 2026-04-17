@@ -1,11 +1,11 @@
-import { CheckCircle, User2Icon } from "lucide-react";
+import { CheckCircle, Loader2Icon, User2Icon } from "lucide-react";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import AuthModal from "../../pages/Auth";
 
 export default function Navbar() {
-  const { user, setUser } = useContext(AppContext);
+  const { user, setUser, loading, logoutUser } = useContext(AppContext);
   const [authOpen, setAuthOpen] = useState(false);
 
   return (
@@ -21,7 +21,22 @@ export default function Navbar() {
 
         <div>
           {user ? (
-            <User2Icon className="cursor-pointer" />
+            <div className="relative group">
+              {loading ? (
+                <Loader2Icon className="text-indigo-400 size-7" />
+              ) : (
+                <User2Icon className="cursor-pointer" />
+              )}
+              <div
+                className="hidden group-hover:block absolute right-0 bg-zinc-800 text-zinc-300 py-1 px-4 rounded-md text-sm md:text-md cursor-pointer"
+                onClick={() => {
+                  logoutUser();
+                  setUser(null);
+                }}
+              >
+                Logout
+              </div>
+            </div>
           ) : (
             <Link
               onClick={() => setAuthOpen(true)}
