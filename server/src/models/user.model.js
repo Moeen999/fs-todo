@@ -15,11 +15,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    todoData: {
-      type: Array,
-      default: [],
-    },
-
     isVerified: {
       type: Boolean,
       default: false,
