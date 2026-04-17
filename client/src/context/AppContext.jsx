@@ -9,12 +9,14 @@ export const AppContext = createContext();
 const AppContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [token, setToken] = useState(null);
 
   const getUser = async () => {
     setLoading(true);
     try {
       const { data } = await API.get("/api/user/profile");
-      setUser(data.user);
+      setToken(data?.accessToken);
+      setUser(data?.user);
     } catch (err) {
       setUser(null);
       setLoading(false);
@@ -45,6 +47,8 @@ const AppContextProvider = ({ children }) => {
     setUser,
     loading,
     logoutUser,
+    token,
+    setToken,
   };
 
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
