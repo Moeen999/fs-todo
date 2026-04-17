@@ -2,8 +2,9 @@ import configs from "../../config/config.js";
 import sessionModel from "../models/session.model.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import crypto from "crypto";
+import jwt from "jsonwebtoken"
+import crypto from "crypto"
+
 
 const createUser = async (req, res) => {
   try {
