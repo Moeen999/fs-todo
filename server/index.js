@@ -8,9 +8,12 @@ import connectDB from "./config/db.js";
 import userRouter from "./src/routes/user.routes.js";
 
 const app = express();
+app.use(cors({
+  origin: configs.CLIENT_URL,
+  credentials: true,
+}));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 connectDB();
 const PORT = configs.PORT;
 

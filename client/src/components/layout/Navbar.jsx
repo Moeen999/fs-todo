@@ -8,7 +8,6 @@ export default function Navbar() {
   const { user, setUser } = useContext(AppContext);
   const [authOpen, setAuthOpen] = useState(false);
 
-
   return (
     <nav className="h-16 border-b border-zinc-800 flex items-center px-6">
       <div className="w-full flex items-center justify-between gap-2 text-xl font-semibold">
@@ -24,12 +23,16 @@ export default function Navbar() {
           {user ? (
             <User2Icon className="cursor-pointer" />
           ) : (
-            <Link onClick={()=>setAuthOpen(true)} to="/login" className="text-md font-medium tracking-wide hover:text-zinc-500">
+            <Link
+              onClick={() => setAuthOpen(true)}
+              to="/login"
+              className="text-md font-medium tracking-wide hover:text-zinc-500"
+            >
               <span>Login</span>
             </Link>
           )}
         </div>
-                {authOpen && <AuthModal close={() => setAuthOpen(false)} />}
+        {authOpen && <AuthModal close={() => setAuthOpen(false)} />}
       </div>
     </nav>
   );

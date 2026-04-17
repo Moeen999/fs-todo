@@ -1,8 +1,60 @@
 import { useState } from "react";
 import { X, Mail, Lock, User } from "lucide-react";
+import toast from "react-hot-toast";
+import API from "../config/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthModal({ close }) {
+  const navigate = useNavigate();
   const [mode, setMode] = useState("login");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (mode === "login") {
+        const { data } = await API.post("/api/user/login", {
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (data?.user) {
+          toast.success(data?.message);
+          navigate("/dashboard");
+          close();
+        } else {
+          toast.error(data?.message);
+        }
+      } else {
+        const { data } = await API.post("/api/user/register", {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        });
+        if (data?.user) {
+          toast.success(data?.message);
+          navigate("/dashboard");
+          close();
+        } else {
+          toast.error(data?.message);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center px-4">
@@ -25,6 +77,9 @@ export default function AuthModal({ close }) {
               <input
                 className="w-full text-sm bg-zinc-800 border border-zinc-700 pl-10 pr-4 py-3 rounded-lg outline-none"
                 placeholder="Full Name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
               />
             </div>
           )}
@@ -34,6 +89,9 @@ export default function AuthModal({ close }) {
             <input
               className="w-full text-sm bg-zinc-800 border border-zinc-700 pl-10 pr-4 py-3 rounded-lg outline-none"
               placeholder="Email Address"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
             />
           </div>
 
@@ -43,10 +101,16 @@ export default function AuthModal({ close }) {
               type="password"
               className="w-full text-sm bg-zinc-800 border border-zinc-700 pl-10 pr-4 py-3 rounded-lg outline-none"
               placeholder="Password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
             />
           </div>
 
-          <button className="w-full bg-emerald-600 hover:bg-emerald-700 py-3 rounded-lg font-medium transition">
+          <button
+            onClick={handleFormSubmit}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 py-3 rounded-lg font-medium transition"
+          >
             {mode === "login" ? "Login" : "Sign Up"}
           </button>
         </form>
