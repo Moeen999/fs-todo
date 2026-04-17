@@ -4,6 +4,10 @@ const createTodo = async (req, res) => {
   const { title } = req.body;
 
   if (!title) return res.status(400).json({ message: "Title is required" });
+  const existingTodo = await TodoModel.findOne({ title, user: req.userId });
+  if (existingTodo) {
+    return res.status(400).json({ message: "Title already exists" });
+  }
 
   const todo = await TodoModel.create({
     title,
@@ -20,4 +24,21 @@ const getTodos = async (req, res) => {
   res.json(todos);
 };
 
-export { createTodo, getTodos };
+const updateTodoTitle = async (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+
+  const todo = await TodoModel.findOneAndUpdate(
+    { _id: id, user: req.userId },
+    { title },
+    { new: true },
+  );
+
+  if (!todo) return res.status(404).json({ message: "Todo not found" });
+
+  res
+    .status(200)
+    .json({ success: true, message: "Todo updated successfully", todo });
+};
+
+export { createTodo, getTodos, updateTodoTitle };

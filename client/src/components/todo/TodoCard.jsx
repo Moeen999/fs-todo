@@ -12,6 +12,10 @@ export default function TodoCard({ todos }) {
         <span>{todos?.title}</span>
 
         <div className="flex gap-3">
+          <select className="bg-zinc-800 text-sm px-2 py-1 rounded-lg">
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+          </select>
           <button onClick={() => setOpen(true)} className="text-blue-500">
             <Edit size={18} />
           </button>
@@ -21,7 +25,7 @@ export default function TodoCard({ todos }) {
         </div>
       </div>
 
-      {open && <EditTodoModal close={() => setOpen(false)} />}
+      {open && <EditTodoModal todos={todos} close={() => setOpen(false)} />}
     </>
   );
 }
