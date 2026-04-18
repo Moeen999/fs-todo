@@ -21,9 +21,11 @@ export default function TodoForm() {
           },
         },
       );
-      if(data?.success){
-        getTodos()
+      if (data?.success) {
+        getTodos();
         toast.success(data?.message);
+      } else {
+        toast.error(data?.message);
       }
     } catch (error) {
       console.log(error);

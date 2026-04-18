@@ -1,17 +1,26 @@
-import { CheckCircle, Loader2Icon, User2Icon } from "lucide-react";
+import { CheckCircle, Loader2Icon, User2Icon, Menu } from "lucide-react";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import AuthModal from "../../pages/Auth";
 
-export default function Navbar() {
+export default function Navbar({ onToggleSidebar }) {
   const { user, setUser, loading, logoutUser, authOpen, setAuthOpen } =
     useContext(AppContext);
   const navigate = useNavigate();
 
   return (
-    <nav className="h-16 border-b border-zinc-800 flex items-center px-6">
+    <nav className="h-16 border-b border-zinc-800 flex items-center px-4 md:px-6">
       <div className="w-full flex items-center justify-between gap-2 text-xl font-semibold">
+        <button
+          type="button"
+          onClick={onToggleSidebar}
+          className="md:hidden p-2 rounded-lg hover:bg-zinc-900 transition-colors"
+          aria-label="Toggle navigation menu"
+        >
+          <Menu size={20} />
+        </button>
+
         <Link
           to="/dashboard"
           className="flex items-center justify-between gap-2"
