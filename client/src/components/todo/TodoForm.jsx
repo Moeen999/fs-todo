@@ -23,8 +23,10 @@ export default function TodoForm() {
       );
       if (data?.success) {
         getTodos();
+        setTitle("");
         toast.success(data?.message);
       } else {
+        setTitle("");
         toast.error(data?.message);
       }
     } catch (error) {
