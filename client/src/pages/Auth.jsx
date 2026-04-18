@@ -29,11 +29,22 @@ export default function AuthModal({ close }) {
     e.preventDefault();
     try {
       setLoading(true);
+      if (
+        !formData.email ||
+        !formData.password ||
+        (mode === "signup" && !formData.name)
+      ) {
+        toast.error("Please fill in all fields");
+        setLoading(false);
+        return;
+      }
       if (mode === "login") {
         const { data } = await API.post("/api/user/login", {
           email: formData.email,
           password: formData.password,
         });
+
+        console.log(data);
 
         if (data?.user) {
           setLoading(false);
@@ -44,7 +55,9 @@ export default function AuthModal({ close }) {
           close();
         } else {
           setLoading(false);
-          toast.error(data?.message);
+          setUser(null);
+          setToken(null);
+          toast.error(data.message);
         }
       } else {
         setLoading(true);
@@ -56,15 +69,19 @@ export default function AuthModal({ close }) {
         if (data?.user) {
           setLoading(false);
           setUser(data.user);
+          setToken(data.accessToken);
           toast.success(data?.message);
           navigate("/dashboard");
           close();
         } else {
+          setUser(null);
+          setToken(null);
           setLoading(false);
-          toast.error(data?.message);
         }
       }
     } catch (error) {
+      setLoading(false);
+      toast.error(error.response.data.message);
       console.log(error);
     }
   };
@@ -94,6 +111,7 @@ export default function AuthModal({ close }) {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
+                required={true}
               />
             </div>
           )}
@@ -106,6 +124,7 @@ export default function AuthModal({ close }) {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
+              required={true}
             />
           </div>
 
@@ -118,15 +137,22 @@ export default function AuthModal({ close }) {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
+              required={true}
             />
           </div>
 
           <button
-          diabsled={loading}
+            diabsled={loading}
             onClick={handleFormSubmit}
             className="w-full bg-emerald-600 hover:bg-emerald-700 py-3 rounded-lg font-medium transition flex justify-center items-center"
           >
-            {loading ? <Loader2Icon className="animate-spin" /> : mode === "login" ? "Login" : "Sign Up"}
+            {loading ? (
+              <Loader2Icon className="animate-spin" />
+            ) : mode === "login" ? (
+              "Login"
+            ) : (
+              "Sign Up"
+            )}
           </button>
         </form>
 
