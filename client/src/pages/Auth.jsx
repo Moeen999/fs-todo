@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Mail, Lock, User } from "lucide-react";
+import { X, Mail, Lock, User, Loader2Icon } from "lucide-react";
 import toast from "react-hot-toast";
 import API from "../config/axios";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,8 @@ import { AppContext } from "../context/AppContext";
 
 export default function AuthModal({ close }) {
   const navigate = useNavigate();
-  const { setUser, setToken, authOpen } = useContext(AppContext);
+  const { setUser, setToken, authOpen, loading, setLoading } =
+    useContext(AppContext);
   const [mode, setMode] = useState("login");
   const [formData, setFormData] = useState({
     name: "",
@@ -27,6 +28,7 @@ export default function AuthModal({ close }) {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       if (mode === "login") {
         const { data } = await API.post("/api/user/login", {
           email: formData.email,
@@ -34,26 +36,31 @@ export default function AuthModal({ close }) {
         });
 
         if (data?.user) {
+          setLoading(false);
           setUser(data.user);
           setToken(data.accessToken);
           toast.success(data?.message);
           navigate("/dashboard");
           close();
         } else {
+          setLoading(false);
           toast.error(data?.message);
         }
       } else {
+        setLoading(true);
         const { data } = await API.post("/api/user/register", {
           name: formData.name,
           email: formData.email,
           password: formData.password,
         });
         if (data?.user) {
+          setLoading(false);
           setUser(data.user);
           toast.success(data?.message);
           navigate("/dashboard");
           close();
         } else {
+          setLoading(false);
           toast.error(data?.message);
         }
       }
@@ -115,10 +122,11 @@ export default function AuthModal({ close }) {
           </div>
 
           <button
+          diabsled={loading}
             onClick={handleFormSubmit}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 py-3 rounded-lg font-medium transition"
+            className="w-full bg-emerald-600 hover:bg-emerald-700 py-3 rounded-lg font-medium transition flex justify-center items-center"
           >
-            {mode === "login" ? "Login" : "Sign Up"}
+            {loading ? <Loader2Icon className="animate-spin" /> : mode === "login" ? "Login" : "Sign Up"}
           </button>
         </form>
 

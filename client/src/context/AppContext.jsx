@@ -72,6 +72,7 @@ const AppContextProvider = ({ children }) => {
     user,
     setUser,
     loading,
+    setLoading,
     logoutUser,
     token,
     setToken,
